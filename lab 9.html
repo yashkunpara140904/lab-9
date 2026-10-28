@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Gen'z Store</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" 
+
+rel="stylesheet">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-
+
+icons.css" rel="stylesheet">
+
+<style>
+
+body {
+
+background: #f4f5fb;
+
+font-family: Arial, sans-serif;
+
+}
+
+.navbar {
+
+background: linear-gradient(90deg,#4338ca,#9333ea,#db2777);
+
+}
+
+.brand {
+
+color: white;
+
+font-size: 25px;
+
+font-weight: bold;
+
+}
+
+.sidebar {
+
+background: white;
+
+min-height: 90vh;
+
+border-radius: 12px;
+
+padding: 20px;
+
+}
+
+.category {
+
+display: block;
+
+padding: 11px;
+
+color: #444;
+
+text-decoration: none;
+
+border-radius: 8px;
+
+margin-bottom: 5px;
+
+cursor: pointer;
+
+}
+
+.category:hover, .category.active {
+
+background: #4f46e5;
+
+color: white;
+
+}
+
+.product-card {
+
+border: none;
+
+border-radius: 13px;
+
+overflow: hidden;
+
+height: 100%;
+
+transition: .3s;
+
+}
+
+.product-card:hover {
+
+transform: translateY(-5px);
+
+box-shadow: 0 8px 22px #0002;
+
+}
+
+.product-img {
+
+height: 175px;
+
+width: 100%;
+
+object-fit: contain;
+
+padding: 12px;
+
+background: white;
+
+}
+
+.btn-purple {
+
+background: #4f46e5;
+
+color: white;
+
+}
+
+.btn-purple:hover {
+
+background: #3730a3;
+
+color: white;
+
+}
+
+.price {
+
+color: #4f46e5;
+
+font-weight: bold;
+
+}
+
+.section-title {
+
+background: white;
+
+border-radius: 10px;
+
+padding: 15px;
+
+margin-bottom: 20px;
+
+}
+
+.product-name {
+
+min-height: 42px;
+
+}
+
+footer {
+
+background: #1e1b4b;
+
+color: white;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<nav class="navbar navbar-expand-lg navbar-dark p-3">
+
+<div class="container-fluid">
+
+<a class="navbar-brand brand" href="#">Gen'z Store</a>
+
+<button class="navbar-toggler" data-bs-toggle="collapse"
+
+data-bs-target="#navMenu">
+
+<span class="navbar-toggler-icon"></span>
+
+</button>
+
+<div class="collapse navbar-collapse" id="navMenu">
+
+<form class="d-flex mx-auto my-3 my-lg-0" id="searchForm">
+
+<input class="form-control me-2" id="searchInput"
+
+placeholder="Search products..." style="width:260px">
+
+<button class="btn btn-light" type="submit">
+
+<i class="bi bi-search"></i>
+
+</button>
+
+</form>
+
+<div class="d-flex gap-2">
+
+<button class="btn btn-light" onclick="showWishlist()">
+
+<i class="bi bi-heart"></i>
+
+<span id="wishCount">0</span>
+
+</button>
+
+<button class="btn btn-light" onclick="openCart()">
+
+<i class="bi bi-cart3"></i>
+
+Cart (<span id="cartCount">0</span>)
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</nav>
+
+<div class="container-fluid p-3 p-lg-4">
+
+<div class="row g-4">
+
+<!-- SIDEBAR -->
+
+<div class="col-lg-3 col-xl-2">
+
+<div class="sidebar shadow-sm">
+
+<h5 class="fw-bold mb-3">
+
+<i class="bi bi-grid"></i> Categories
+
+</h5>
+
+<a class="category active" data-category="All">
+
+<i class="bi bi-house me-2"></i> Home
+
+</a>
+
+<a class="category" data-category="Electronics">
+
+<i class="bi bi-laptop me-2"></i> Electronics
+
+</a>
+
+<a class="category" data-category="Clothing">
+
+<i class="bi bi-handbag me-2"></i> Clothing
+
+</a>
+
+<a class="category" data-category="Shoes">
+
+<i class="bi bi-shoe me-2"></i> Sports Shoes
+
+</a>
+
+<a class="category" data-category="Accessories">
+
+<i class="bi bi-watch me-2"></i> Accessories
+
+</a>
+
+<hr>
+
+<h5 class="fw-bold">Filter by Price</h5>
+
+<select class="form-select mb-3" id="priceFilter">
+
+<option value="all">All Prices</option>
+
+<option value="1000">Under ₹1,000</option>
+
+<option value="3000">Under ₹3,000</option>
+
+<option value="10000">Under ₹10,000</option>
+
+</select>
+
+<h5 class="fw-bold">Sort Products</h5>
+
+<select class="form-select mb-3" id="sortFilter">
+
+<option value="default">Default</option>
+
+<option value="low">Price: Low to High</option>
+
+<option value="high">Price: High to Low</option>
+
+<option value="name">Name: A to Z</option>
+
+</select>
+
+<button class="btn btn-outline-secondary w-100" onclick="resetFilters()">
+
+Reset Filters
+
+</button>
+
+</div>
+
+</div>
+
+<!-- MAIN CONTENT -->
+
+<div class="col-lg-9 col-xl-10">
+
+<div class="section-title shadow-sm">
+
+<h3 class="fw-bold">Welcome to Gen'z Store </h3>
+
+<p class="text-muted mb-0">
+
+Discover the latest products at amazing prices.
+
+</p>
+
+</div>
+
+<!-- BANNER -->
+
+<div class="p-4 p-md-5 mb-4 rounded-4 text-white"
+
+style="background:linear-gradient(110deg,#4338ca,#9333ea,#ec4899)">
+
+<h2 class="fw-bold">Mega Shopping Sale!</h2>
+
+<p>Find your favourite products in one place.</p>
+
+<button class="btn btn-light fw-bold"
+
+onclick="document.getElementById('productsSection').scrollIntoView({behavior:'smooth'}
+
+)">
+
+Shop Now <i class="bi bi-arrow-right"></i>
+
+</button>
+
+</div>
+
+<!-- PRODUCTS -->
+
+<div id="productsSection">
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+
+<h4 class="fw-bold mb-0">Our Products</h4>
+
+<span class="text-muted" id="resultCount"></span>
+
+</div>
+
+<div class="row g-3" id="productList"></div>
+
+<nav class="mt-4">
+
+<ul class="pagination justify-content-center" id="pagination"></ul>
+
+</nav>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- CART MODAL -->
+
+<div class="modal fade" id="cartModal" tabindex="-1">
+
+<div class="modal-dialog modal-lg modal-dialog-centered">
+
+<div class="modal-content">
+
+<div class="modal-header text-white"
+
+style="background:#4f46e5">
+
+<h5 class="modal-title">My Shopping Cart</h5>
+
+<button class="btn-close btn-close-white"
+
+data-bs-dismiss="modal"></button>
+
+</div>
+
+<div class="modal-body">
+
+<div id="cartItems"></div>
+
+<hr>
+
+<h5 class="text-end">
+
+Total: ₹<span id="cartTotal">0</span>
+
+</h5>
+
+<button class="btn btn-success w-100 mt-3"
+
+onclick="goCheckout()">
+
+Proceed to Checkout
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- CHECKOUT MODAL -->
+
+<div class="modal fade" id="checkoutModal" tabindex="-1">
+
+<div class="modal-dialog modal-dialog-centered">
+
+<div class="modal-content">
+
+<div class="modal-header text-white"
+
+style="background:#4f46e5">
+
+<h5 class="modal-title">Checkout Form</h5>
+
+<button class="btn-close btn-close-white"
+
+data-bs-dismiss="modal"></button>
+
+</div>
+
+<div class="modal-body">
+
+<form id="checkoutForm">
+
+<div class="mb-3">
+
+<label class="form-label">Full Name</label>
+
+<input class="form-control" required
+
+placeholder="Enter your name">
+
+</div>
+
+<div class="mb-3">
+
+<label class="form-label">Email Address</label>
+
+<input type="email" class="form-control"
+
+required placeholder="Enter your email">
+
+</div>
+
+<div class="mb-3">
+
+<label class="form-label">Phone Number</label>
+
+<input type="tel" class="form-control"
+
+pattern="[0-9]{10}" required
+
+placeholder="10-digit mobile number">
+
+</div>
+
+<div class="mb-3">
+
+<label class="form-label">Delivery Address</label>
+
+<textarea class="form-control" rows="3"
+
+required placeholder="Enter your address"></textarea>
+
+</div>
+
+<div class="mb-3">
+
+<label class="form-label">Payment Method</label>
+
+<select class="form-select" required>
+
+<option value="">Select payment method</option>
+
+<option>Cash on Delivery</option>
+
+<option>UPI</option>
+
+<option>Credit / Debit Card</option>
+
+</select>
+
+</div>
+
+<h5>Total: ₹<span id="checkoutTotal">0</span></h5>
+
+<button type="submit" class="btn btn-success w-100 mt-3">
+
+Place Order
+
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- WISHLIST MODAL -->
+
+<div class="modal fade" id="wishlistModal" tabindex="-1">
+
+<div class="modal-dialog modal-dialog-centered">
+
+<div class="modal-content">
+
+<div class="modal-header">
+
+<h5 class="modal-title">My Wishlist </h5>
+
+<button class="btn-close" data-bs-dismiss="modal"></button>
+
+</div>
+
+<div class="modal-body" id="wishlistItems"></div>
+
+</div>
+
+</div>
+
+</div>
+
+<footer class="text-center p-4 mt-4">
+
+<h5>Gen'z Store</h5>
+
+<p class="mb-0">Your favourite products, all in one place.</p>
+
+<small>© 2026 Gen'z Store. All rights reserved.</small>
+
+</footer>
+
+<script 
+
+src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></s
+
+cript>
+
+<script>
+
+const products = [
+
+{id:1, name:"Laptop", price:45990, category:"Electronics",
+
+image:"https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=500"},
+
+{id:2, name:"Smartphone", price:79999, category:"Electronics",
+
+image:"https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500"},
+
+{id:3, name:"Sports Shoes", price:3499, category:"Shoes",
+
+image:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500"},
+
+{id:4, name:"Smart Watch", price:8999, category:"Accessories",
+
+image:"https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500"},
+
+{id:5, name:"Headphones", price:1999, category:"Electronics",
+
+image:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500"},
+
+{id:6, name:"Casual T-Shirt", price:799, category:"Clothing",
+
+image:"https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500"},
+
+{id:7, name:"Backpack", price:1299, category:"Accessories",
+
+image:"https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500"},
+
+{id:8, name:"Running Shoes", price:2499, category:"Shoes",
+
+image:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500"},
+
+{id:9, name:"Camera", price:8999, category:"Electronics",
+
+image:"https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=500"},
+
+{id:10, name:"Classic Watch", price:2499, category:"Accessories",
+
+image:"https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=500"},
+
+{id:11, name:"Winter Jacket", price:2999, category:"Clothing",
+
+image:"https://images.unsplash.com/photo-1551028719-00167b16eac5?w=500"},
+
+{id:12, name:"Wireless Earbuds", price:1499, category:"Electronics",
+
+image:"https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?w=500"}
+
+];
+
+let cart = [];
+
+let wishlist = [];
+
+let selectedCategory = "All";
+
+let currentPage = 1;
+
+const perPage = 8;
+
+const money = n => n.toLocaleString("en-IN");
+
+function getFilteredProducts() {
+
+let list = products.filter(p =>
+
+(selectedCategory === "All" || p.category === selectedCategory) &&
+
+p.name.toLowerCase().includes(
+
+document.getElementById("searchInput").value.toLowerCase()
+
+) &&
+
+(document.getElementById("priceFilter").value === "all" ||
+
+p.price < Number(document.getElementById("priceFilter").value))
+
+);
+
+let sort = document.getElementById("sortFilter").value;
+
+if(sort === "low") list.sort((a,b) => a.price-b.price);
+
+if(sort === "high") list.sort((a,b) => b.price-a.price);
+
+if(sort === "name") list.sort((a,b) => a.name.localeCompare(b.name));
+
+return list;
+
+}
+
+function renderProducts() {
+
+const list = getFilteredProducts();
+
+const start = (currentPage-1)*perPage;
+
+const visible = list.slice(start,start+perPage);
+
+document.getElementById("resultCount").textContent =
+
+list.length + " products found";
+
+document.getElementById("productList").innerHTML = visible.length
+
+? visible.map(p => `
+
+<div class="col-6 col-md-4 col-xl-3">
+
+<div class="card product-card shadow-sm">
+
+<img src="${p.image}" class="product-img" alt="${p.name}"
+
+onerror="this.onerror=null;this.src='https://placehold.co/400x300?text=Product'">
+
+<div class="card-body text-center d-flex flex-column">
+
+<small class="text-muted">${p.category}</small>
+
+<h6 class="product-name mt-2">${p.name}</h6>
+
+<h5 class="price">₹${money(p.price)}</h5>
+
+<div class="d-flex gap-2 mt-auto">
+
+<button class="btn btn-purple btn-sm flex-grow-1"
+
+onclick="addToCart(${p.id})">
+
+<i class="bi bi-cart-plus"></i> Add
+
+</button>
+
+<button class="btn btn-outline-danger btn-sm"
+
+onclick="toggleWish(${p.id})"
+
+aria-label="Add to wishlist">
+
+<i class="bi bi-heart"></i>
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>`).join("")
+
+: '<div class="col-12 text-center p-5">No products found.</div>';
+
+const pages = Math.ceil(list.length/perPage);
+
+document.getElementById("pagination").innerHTML =
+
+Array.from({length:pages},(_,i)=>`
+
+<li class="page-item ${currentPage===i+1?'active':''}">
+
+<button class="page-link" onclick="changePage(${i+1})">
+
+${i+1}
+
+</button>
+
+</li>`).join("");
+
+}
+
+function changePage(page) {
+
+currentPage = page;
+
+renderProducts();
+
+}
+
+function resetPage() {
+
+currentPage = 1;
+
+renderProducts();
+
+}
+
+document.querySelectorAll(".category").forEach(el => {
+
+el.addEventListener("click", function() {
+
+document.querySelectorAll(".category").forEach(c=>c.classList.remove("active"));
+
+this.classList.add("active");
+
+selectedCategory = this.dataset.category;
+
+resetPage();
+
+});
+
+});
+
+document.getElementById("searchForm").addEventListener("submit",e=>{
+
+e.preventDefault();
+
+resetPage();
+
+});
+
+document.getElementById("searchInput").addEventListener("input",resetPage);
+
+document.getElementById("priceFilter").addEventListener("change",resetPage);
+
+document.getElementById("sortFilter").addEventListener("change",resetPage);
+
+function resetFilters() {
+
+selectedCategory = "All";
+
+document.getElementById("searchInput").value = "";
+
+document.getElementById("priceFilter").value = "all";
+
+document.getElementById("sortFilter").value = "default";
+
+document.querySelectorAll(".category").forEach(c=>
+
+c.classList.toggle("active",c.dataset.category==="All"));
+
+resetPage();
+
+}
+
+function addToCart(id) {
+
+let item = cart.find(p=>p.id===id);
+
+if(item) item.quantity++;
+
+else cart.push({...products.find(p=>p.id===id),quantity:1});
+
+updateCart();
+
+}
+
+function updateCart() {
+
+const count = cart.reduce((s,p)=>s+p.quantity,0);
+
+const total = cart.reduce((s,p)=>s+p.price*p.quantity,0);
+
+document.getElementById("cartCount").textContent = count;
+
+document.getElementById("cartTotal").textContent = money(total);
+
+document.getElementById("checkoutTotal").textContent = money(total);
+
+document.getElementById("cartItems").innerHTML = cart.length
+
+? cart.map(p=>`
+
+<div class="d-flex justify-content-between align-items-center gap-2 border-bottom py-
+
+3">
+
+<div><strong>${p.name}</strong><br>₹${money(p.price)} × ${p.quantity}</div>
+
+<div class="d-flex align-items-center gap-2">
+
+<button class="btn btn-sm btn-outline-secondary"
+
+onclick="changeQty(${p.id},-1)">−</button>
+
+<span>${p.quantity}</span>
+
+<button class="btn btn-sm btn-outline-secondary"
+
+onclick="changeQty(${p.id},1)">+</button>
+
+Harshiva Joshi (92610120016) FACULTY OF ENGINEERING AND 
+
+TECHNOLOGY
+
+Department of Computer Engineering
+
+01CE1306 – Web Technology – Lab #9
+
+18
+
+<button class="btn btn-sm btn-danger"
+
+onclick="removeCart(${p.id})"><i class="bi bi-trash"></i></button>
+
+</div>
+
+</div>`).join("")
+
+: "<p>Your cart is empty.</p>";
+
+}
+
+function changeQty(id,change) {
+
+let p=cart.find(p=>p.id===id);
+
+if(p) p.quantity+=change;
+
+cart=cart.filter(p=>p.quantity>0);
+
+updateCart();
+
+}
+
+function removeCart(id) {
+
+cart=cart.filter(p=>p.id!==id);
+
+updateCart();
+
+}
+
+function openCart() {
+
+bootstrap.Modal.getOrCreateInstance(
+
+document.getElementById("cartModal")).show();
+
+}
+
+function goCheckout() {
+
+if(!cart.length) {
+
+alert("Please add products to your cart first!");
+
+return;
+
+}
+
+bootstrap.Modal.getInstance(document.getElementById("cartModal")).hide();
+
+bootstrap.Modal.getOrCreateInstance(
+
+document.getElementById("checkoutModal")).show();
+
+}
+
+function toggleWish(id) {
+
+wishlist = wishlist.includes(id)
+
+? wishlist.filter(x=>x!==id) : [...wishlist,id];
+
+document.getElementById("wishCount").textContent=wishlist.length;
+
+}
+
+function showWishlist() {
+document.getElementById("wishlistItems").innerHTML=wishlist.length
+
+? wishlist.map(id=>{
+
+const p=products.find(x=>x.id===id);
+
+return `<div class="d-flex justify-content-between border-bottom py-2">
+
+<span>${p.name} — ₹${money(p.price)}</span>
+
+<button class="btn btn-sm btn-purple" onclick="addToCart(${p.id})">
+
+Add to Cart</button></div>`;
+
+}).join("")
+
+: "<p>Your wishlist is empty.</p>";
+
+bootstrap.Modal.getOrCreateInstance(
+
+document.getElementById("wishlistModal")).show();
+
+}
+
+document.getElementById("checkoutForm").addEventListener("submit",function(e){
+
+e.preventDefault();
+
+if(!cart.length) return;
+
+alert("Demo order placed successfully! Total: ₹" +
+
+money(cart.reduce((s,p)=>s+p.price*p.quantity,0)));
+
+cart=[];
+
+updateCart();
+
+this.reset();
+
+bootstrap.Modal.getInstance(
+
+document.getElementById("checkoutModal")).hide();
+
+});
+
+renderProducts();
+
+updateCart();
+
+</script>
+
+</body>
+
+</html>
